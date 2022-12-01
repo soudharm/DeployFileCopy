@@ -119,7 +119,7 @@ namespace File_Automation.Controllers
                 }
                 streamwriter.Close();
             }
-            catch(exception ex)
+            catch(Exception ex)
             {
                 //TempData["alertMessage"] = "Please Provide the details Correctly";
                 //return RedirectToAction("UploadIssue");
