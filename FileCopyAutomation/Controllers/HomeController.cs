@@ -84,8 +84,8 @@ namespace File_Automation.Controllers
         public IActionResult Upload(Upload model)
         {
             
-            try
-            {
+            //try
+            //{
                 string containerName = model.DestContainer;
                 string folderpath = model.LocalPath;
 
@@ -95,10 +95,10 @@ namespace File_Automation.Controllers
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connection(model.environment, model.storage));
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
                 FileStream filestream = new FileStream(logpath, FileMode.Create);
-                StreamWriter streamwriter = new StreamWriter(filestream);
-                streamwriter.AutoFlush = true;
-                Console.SetOut(streamwriter);
-                Console.SetError(streamwriter);
+                //StreamWriter streamwriter = new StreamWriter(filestream);
+                //streamwriter.AutoFlush = true;
+                //Console.SetOut(streamwriter);
+                //Console.SetError(streamwriter);
 
 
                 foreach (var file in files)
@@ -117,20 +117,21 @@ namespace File_Automation.Controllers
                     }
 
                 }
-                streamwriter.Close();
-            }
-            catch(Exception ex)
-            {
-                //TempData["alertMessage"] = "Please Provide the details Correctly";
-                //return RedirectToAction("UploadIssue");
-                string message = ex.Message;
-                Console.WriteLine(message);
-            }
+                //streamwriter.Close();
+            //}
+            //catch
+            //{
+            //    TempData["alertMessage"] = "Please Provide the details Correctly";
+            //    return RedirectToAction("UploadIssue");
+            //    //string message = ex.Message;
+            //    //Console.WriteLine(message);
+            //}
 
             _db.Uploads.Add(model);
             _db.SaveChanges();
 
             return RedirectToAction("Logs");
+                
         }
 
         public IActionResult UploadIssue()
