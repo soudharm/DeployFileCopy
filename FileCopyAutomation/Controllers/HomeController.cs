@@ -98,15 +98,15 @@ namespace File_Automation.Controllers
                 //BlobContainerClient containerClient = new BlobContainerClient(connection(model.environment, model.storage), containerName);
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connection(model.environment, model.storage));
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-                //FileStream filestream = new FileStream(logpath, FileMode.Create);
-                //StreamWriter streamwriter = new StreamWriter(filestream);
-                //streamwriter.AutoFlush = true;
-                //Console.SetOut(streamwriter);
-                //Console.SetError(streamwriter);
+                FileStream filestream = new FileStream(logpath, FileMode.Create);
+                StreamWriter streamwriter = new StreamWriter(filestream);
+                streamwriter.AutoFlush = true;
+                Console.SetOut(streamwriter);
+                Console.SetError(streamwriter);
 
-
+                Console.WriteLine("Started");
                 //BlobClient blob=containerClient.GetBlobClient(folderpath);
-                foreach(IFormFile path in model.LocalPath)
+                foreach (IFormFile path in model.LocalPath)
                 {
                     var filePathOverCloud = model.AzFolderName + "/" + path.FileName;
 
@@ -122,7 +122,7 @@ namespace File_Automation.Controllers
                     }
                 }
                 
-                //streamwriter.Close();
+                streamwriter.Close();
             }
             catch
             {
