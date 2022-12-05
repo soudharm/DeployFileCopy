@@ -25,7 +25,7 @@ namespace File_Automation.Models
         public string Operation { get; set; }
         public string environment { get; set; }
         public string storage { get; set; }
-        public string LocalPath { get; set; }
+        public List<IFormFile> LocalPath { get; set; }
         public string DestContainer { get; set; }
         public string AzFolderName { get; set; }
         public string FileName { get; set; }

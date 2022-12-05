@@ -83,49 +83,54 @@ namespace File_Automation.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upload(Upload model)
         {
-            
-            //try
-            //{
-                string containerName = model.DestContainer;
-                string folderpath = model.LocalPath;
 
-                var files = Directory.GetFiles(folderpath, model.FileName, SearchOption.AllDirectories);
+            try
+            {
+                string containerName = model.DestContainer;
+                //List<string> folderpath = new List<model.LocalPath.FileName>;
+
+                //foreach (var file in folderpath)
+                //{
+                //    Console.WriteLine(file);
+                //}
+                //var files = Directory.GetFiles(folderpath, model.FileName, SearchOption.AllDirectories);
 
                 //BlobContainerClient containerClient = new BlobContainerClient(connection(model.environment, model.storage), containerName);
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connection(model.environment, model.storage));
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-                FileStream filestream = new FileStream(logpath, FileMode.Create);
+                //FileStream filestream = new FileStream(logpath, FileMode.Create);
                 //StreamWriter streamwriter = new StreamWriter(filestream);
                 //streamwriter.AutoFlush = true;
                 //Console.SetOut(streamwriter);
                 //Console.SetError(streamwriter);
 
 
-                foreach (var file in files)
+                //BlobClient blob=containerClient.GetBlobClient(folderpath);
+                foreach(IFormFile path in model.LocalPath)
                 {
-                    var filePathOverCloud = file.Replace(folderpath, model.AzFolderName);
-                    using (MemoryStream stream = new MemoryStream(System.IO.File.ReadAllBytes(file)))
+                    var filePathOverCloud = model.AzFolderName + "/" + path.FileName;
+
+                    foreach (var file in filePathOverCloud)
                     {
-                        //BlobClient blobClient = containerClient.GetBlobClient(model.AzFolderName + "/" + stream);
-                        BlobClient blobClient = containerClient.GetBlobClient(filePathOverCloud);
-                        blobClient.Upload(stream,overwrite: true);
-                        //containerClient.UploadBlob(filePathOverCloud, stream, overwrite: true);
-                        
-                        Console.WriteLine(filePathOverCloud +" "+ "Uploaded!");
-
-                        ////Console.WriteLine(filePathOverCloud + "Uploaded!");
+                        Console.WriteLine(file);
                     }
-
+                    using (Stream stream = path.OpenReadStream())
+                    {
+                        //blob.Upload(stream);
+                        BlobClient blobClient = containerClient.GetBlobClient(filePathOverCloud);
+                        blobClient.Upload(stream, overwrite: true);
+                    }
                 }
+                
                 //streamwriter.Close();
-            //}
-            //catch
-            //{
-            //    TempData["alertMessage"] = "Please Provide the details Correctly";
-            //    return RedirectToAction("UploadIssue");
-            //    //string message = ex.Message;
-            //    //Console.WriteLine(message);
-            //}
+            }
+            catch
+            {
+                TempData["alertMessage"] = "Please Provide the details Correctly";
+                return RedirectToAction("UploadIssue");
+                //string message = ex.Message;
+                //Console.WriteLine(message);
+            }
 
             _db.Uploads.Add(model);
             _db.SaveChanges();
