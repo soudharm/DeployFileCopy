@@ -110,16 +110,14 @@ namespace File_Automation.Controllers
                 {
                     var filePathOverCloud = model.AzFolderName + "/" + path.FileName;
 
-                    foreach (var file in filePathOverCloud)
-                    {
-                        Console.WriteLine(file);
-                    }
+                    
                     using (Stream stream = path.OpenReadStream())
                     {
                         //blob.Upload(stream);
                         BlobClient blobClient = containerClient.GetBlobClient(filePathOverCloud);
                         blobClient.Upload(stream, overwrite: true);
                     }
+                    Console.WriteLine(model.AzFolderName + "/" + path.FileName + " Uploaded");
                 }
                 
                 streamwriter.Close();
